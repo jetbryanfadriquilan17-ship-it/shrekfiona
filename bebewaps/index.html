@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shrek & Fiona</title>
+
+<!-- 🔒 LOGIN GUARD - Dapat nasa pinaka-taas ng head -->
+<script>
+  if (sessionStorage.getItem('loggedIn') !== 'true') {
+    window.location.replace('login.html');
+  }
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -769,7 +777,7 @@
   <!-- HERO -->
   <div class="hero">
     <img src="shrek.gif" alt="Shrek">
-    <h1>Shrek & Fiona</h1>
+    <h1>Shrek & Fiona mweheheh</h1>
     <p class="subtitle">- Jaybeee</p>
   </div>
 
