@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Login 💜 Shrek & Fiona</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #0d0521;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* ✅ Responsive padding gamit clamp */
+    padding: clamp(16px, 3vw, 40px) clamp(12px, 3vw, 30px);
+    position: relative;
+  }
+
+  /* ===== BACKGROUND ===== */
+  .bg-gradient {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(-45deg, #0d0521, #1a0a33, #2d1b4e, #4a1a7a, #6a0dad, #9d4edd, #7b2cbf, #4a1a7a, #2d1b4e, #0d0521);
+    background-size: 400% 400%;
+    animation: gradientShift 18s ease infinite;
+    z-index: -3;
+  }
+
+  @keyframes gradientShift {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .aurora::before,
+  .aurora::after {
+    content: '';
+    position: absolute;
+    width: 80vmax;
+    height: 80vmax;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.4;
+  }
+
+  .aurora::before {
+    background: radial-gradient(circle, #9d4edd, transparent 70%);
+    top: -40%; left: -20%;
+    animation: auroraFloat 15s ease-in-out infinite;
+  }
+
+  .aurora::after {
+    background: radial-gradient(circle, #6a0dad, transparent 70%);
+    bottom: -40%; right: -20%;
+    animation: auroraFloat 18s ease-in-out infinite reverse;
+  }
+
+  @keyframes auroraFloat {
+    0%,100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(10%, 10%) scale(1.2); }
+  }
+
+  /* ===== STARS ===== */
+  .stars { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+
+  .star {
+    position: absolute;
+    background: #e0aaff;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+    box-shadow: 0 0 6px #c77dff, 0 0 12px #9d4edd;
+  }
+
+  @keyframes twinkle {
+    0%,100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.6); }
+  }
+
+  /* ===== SHOOTING STARS ===== */
+  .shooting-star {
+    position: fixed;
+    width: 3px; height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #c77dff, 0 0 20px #9d4edd;
+    z-index: -1;
+    pointer-events: none;
+    animation: shoot 2s linear forwards;
+  }
+
+  .shooting-star::after {
+    content: '';
+    position: absolute;
+    top: 50%; right: 0;
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, #c77dff);
+    transform: translateY(-50%);
+  }
+
+  @keyframes shoot {
+    0% { transform: translate(0, 0) rotate(-45deg); opacity: 1; }
+    100% { transform: translate(-500px, 500px) rotate(-45deg); opacity: 0; }
+  }
+
+  /* ===== FLOATING HEARTS ===== */
+  .float-heart {
+    position: fixed;
+    bottom: -60px;
+    pointer-events: none;
+    z-index: 1;
+    animation: floatUp linear infinite;
+    filter: drop-shadow(0 0 10px rgba(157,78,221,0.9));
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg) scale(0.6); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-110vh) rotate(360deg) scale(1.3); opacity: 0; }
+  }
+
+  /* ============================================================
+     ✅ LOGIN CARD — Responsive gamit clamp()
+     ============================================================ */
+  .login-wrapper {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    max-width: 520px; /* ✅ Sakto sa desktop */
+    animation: cardEnter 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes cardEnter {
+    from { opacity: 0; transform: translateY(50px) scale(0.85); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .login-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 34px;
+    background: linear-gradient(45deg, #9d4edd, #c77dff, #e0aaff, #c77dff, #9d4edd, #6a0dad);
+    background-size: 400% 400%;
+    animation: gradientShift 4s linear infinite;
+    z-index: -1;
+    filter: blur(12px);
+    opacity: 0.7;
+  }
+
+  .login-card {
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 32px;
+    /* ✅ Responsive padding */
+    padding: clamp(30px, 5vw, 55px) clamp(24px, 5vw, 55px) clamp(28px, 5vw, 50px);
+    box-shadow:
+      0 30px 80px rgba(157,78,221,0.5),
+      0 0 120px rgba(157,78,221,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.8);
+    border: 1px solid rgba(199,125,255,0.3);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .login-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #6a0dad, #c77dff, #e0aaff, #9d4edd, #6a0dad);
+    background-size: 300% 100%;
+    animation: gradientShift 3s linear infinite;
+  }
+
+  .login-card::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+    animation: shine 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shine {
+    0%,100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  }
+
+  /* Heart icon */
+  .login-heart {
+    font-size: clamp(55px, 10vw, 85px);
+    display: block;
+    margin-bottom: clamp(4px, 1vw, 8px);
+    animation: heartBeat 1.5s infinite;
+    filter: drop-shadow(0 0 25px rgba(157,78,221,0.7));
+    position: relative;
+    z-index: 2;
+    line-height: 1;
+  }
+
+  @keyframes heartBeat {
+    0%,100% { transform: scale(1); }
+    15% { transform: scale(1.25); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.2); }
+    60% { transform: scale(1); }
+  }
+
+  .login-card h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(34px, 7vw, 52px);
+    background: linear-gradient(135deg, #6a0dad, #9d4edd, #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: clamp(6px, 1.2vw, 10px);
+    line-height: 1.2;
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(157,78,221,0.2));
+  }
+
+  .login-card .subtitle {
+    color: #7b2cbf;
+    font-size: clamp(12px, 1.8vw, 15px);
+    margin-bottom: clamp(20px, 3.5vw, 40px);
+    letter-spacing: 0.5px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: clamp(18px, 3vw, 32px);
+    position: relative;
+    z-index: 2;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #c77dff, transparent);
+  }
+
+  .divider span {
+    color: #9d4edd;
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+
+  /* ===== INPUT ===== */
+  .input-group {
+    position: relative;
+    margin-bottom: clamp(16px, 2.5vw, 24px);
+    text-align: left;
+    z-index: 2;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: clamp(10px, 1.4vw, 12px);
+    font-weight: 700;
+    color: #7b2cbf;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    padding-left: 5px;
+    transition: color 0.3s;
+  }
+
+  .input-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-field .icon {
+    position: absolute;
+    left: clamp(15px, 2.5vw, 20px);
+    font-size: clamp(16px, 2vw, 19px);
+    pointer-events: none;
+    z-index: 2;
+    transition: all 0.3s;
+  }
+
+  .input-field input {
+    width: 100%;
+    padding: clamp(13px, 2vw, 18px) clamp(48px, 8vw, 55px) clamp(13px, 2vw, 18px) clamp(44px, 8vw, 56px);
+    border: 2px solid #e0c3fc;
+    border-radius: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(13px, 1.8vw, 15px);
+    color: #3c096c;
+    background: #faf5ff;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .input-field input::placeholder {
+    color: #b19cd9;
+    font-weight: 300;
+  }
+
+  .input-field input:focus {
+    border-color: #9d4edd;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(157,78,221,0.15), 0 8px 20px rgba(157,78,221,0.15);
+    transform: translateY(-2px);
+  }
+
+  .input-field input:focus ~ .icon {
+    transform: scale(1.2) rotate(-10deg);
+  }
+
+  .toggle-pw {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: clamp(16px, 2vw, 19px);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 10px;
+    transition: all 0.3s;
+    z-index: 2;
+    color: #6a0dad;
+  }
+
+  .toggle-pw:hover { background: rgba(157,78,221,0.1); transform: scale(1.2); }
+  .toggle-pw:active { transform: scale(0.9); }
+
+  /* ===== BUTTON ===== */
+  .login-btn {
+    width: 100%;
+    padding: clamp(15px, 2.5vw, 20px);
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #9d4edd, #6a0dad);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(14px, 1.8vw, 16px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 10px 30px rgba(157,78,221,0.5), 0 0 40px rgba(157,78,221,0.2);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .login-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #c77dff, #e0aaff);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .login-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+
+  .login-btn:hover::before { opacity: 1; }
+  .login-btn:hover::after { left: 100%; }
+  .login-btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 18px 45px rgba(157,78,221,0.7), 0 0 60px rgba(157,78,221,0.4);
+    color: #2d1b4e;
+  }
+
+  .login-btn:active { transform: translateY(-1px) scale(0.98); }
+  .login-btn span { position: relative; z-index: 1; }
+
+  /* ===== ERROR ===== */
+  .error-msg {
+    background: linear-gradient(135deg, #ffe0e0, #ffcccc);
+    color: #c41e3a;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: clamp(11px, 1.5vw, 13px);
+    font-weight: 500;
+    margin-bottom: 20px;
+    border-left: 4px solid #c41e3a;
+    display: none;
+    animation: shake 0.5s ease;
+    text-align: left;
+    position: relative;
+    z-index: 2;
+  }
+
+  .error-msg.show { display: block; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-8px); }
+    40%,80% { transform: translateX(8px); }
+  }
+
+  /* ===== HINT ===== */
+  .hint-text {
+    margin-top: clamp(18px, 3vw, 30px);
+    font-size: clamp(10px, 1.4vw, 12px);
+    color: #b19cd9;
+    line-height: 1.8;
+    position: relative;
+    z-index: 2;
+    padding: clamp(10px, 1.8vw, 14px);
+    background: rgba(157,78,221,0.06);
+    border-radius: 12px;
+    border: 1px dashed rgba(157,78,221,0.2);
+  }
+
+  .hint-text strong {
+    color: #6a0dad;
+    font-weight: 700;
+    background: rgba(157,78,221,0.1);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ===== SUCCESS OVERLAY ===== */
+  .success-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(-45deg, #0d0521, #2d1b4e, #6a0dad, #9d4edd);
+    background-size: 400% 400%;
+    animation: gradientShift 3s ease infinite;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    text-align: center;
+    padding: 30px;
+  }
+
+  .success-overlay.active {
+    display: flex;
+    animation: gradientShift 3s ease infinite, fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .success-overlay .success-heart {
+    font-size: clamp(70px, 15vw, 120px);
+    animation: heartBeat 0.8s infinite;
+    filter: drop-shadow(0 0 50px rgba(199,125,255,1));
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+
+  .success-overlay h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(38px, 8vw, 58px);
+    margin-bottom: 10px;
+    text-shadow: 0 0 40px rgba(199,125,255,0.9);
+    background: linear-gradient(135deg, #fff, #e0aaff, #c77dff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .success-overlay p {
+    color: #e0aaff;
+    font-size: clamp(13px, 1.8vw, 16px);
+    letter-spacing: 2px;
+  }
+
+  /* ===== LOADING SPINNER ===== */
+  .login-btn.loading span { opacity: 0; }
+
+  .login-btn.loading::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 22px; height: 22px;
+    margin: -11px 0 0 -11px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    opacity: 1;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ============================================================
+     ✅ MINIMAL MEDIA QUERIES — para lang sa special cases
+     ============================================================ */
+
+  /* Desktop — kahit mababa ang window height, hindi putol */
+  @media (min-width: 900px) {
+    .login-wrapper { max-width: 520px; }
+  }
+
+  /* Laptop maliit */
+  @media (min-width: 600px) and (max-width: 899px) {
+    .login-wrapper { max-width: 480px; }
+  }
+
+  /* Tablet */
+  @media (min-width: 480px) and (max-width: 599px) {
+    .login-wrapper { max-width: 440px; }
+  }
+
+  /* Mobile */
+  @media (max-width: 479px) {
+    .login-wrapper { max-width: 100%; }
+    .login-card { border-radius: 26px; }
+    .login-wrapper::before { border-radius: 28px; }
+  }
+
+  /* Landscape mobile — para hindi putol ang vertical */
+  @media (max-height: 500px) and (orientation: landscape) {
+    body { align-items: flex-start; padding: 16px; }
+    .login-heart { font-size: 38px; }
+    .login-card h1 { font-size: 28px; }
+    .login-card .subtitle { margin-bottom: 12px; font-size: 11px; }
+    .divider { margin-bottom: 12px; }
+    .input-group { margin-bottom: 10px; }
+    .hint-text { margin-top: 12px; }
+  }
+
+  /* Sobrang liit na height (naka-zoom na desktop) */
+  @media (max-height: 600px) and (min-width: 480px) {
+    .login-heart { font-size: 45px; }
+    .login-card h1 { font-size: 34px; }
+    .login-card .subtitle { margin-bottom: 16px; }
+    .divider { margin-bottom: 14px; }
+    .input-group { margin-bottom: 12px; }
+    .hint-text { margin-top: 14px; padding: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-gradient"></div>
+<div class="aurora"></div>
+<div class="stars" id="stars"></div>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <span class="login-heart">💜</span>
+    <h1>Shrek & Fiona</h1>
+    <p class="subtitle">Ilagay ang password para pumasok</p>
+
+    <div class="divider"><span>✦</span></div>
+
+    <div class="error-msg" id="errorMsg">❌ Mali ang password, subukan ulit!</div>
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="input-group">
+        <label for="username">Username</label>
+        <div class="input-field">
+          <span class="icon">👤</span>
+          <input type="text" id="username" placeholder="Ilagay ang username" autocomplete="username" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <div class="input-field">
+          <span class="icon">🔒</span>
+          <input type="password" id="password" placeholder="Ilagay ang password" autocomplete="current-password" required>
+          <button type="button" class="toggle-pw" id="togglePw" onclick="togglePassword()">👁️</button>
+        </div>
+      </div>
+
+      <button type="submit" class="login-btn" id="loginBtn">
+        <span>Login 💜</span>
+      </button>
+    </form>
+
+    <p class="hint-text">
+      <strong>Hint:</strong> Username: <strong>s</strong> | Password: <strong>f</strong>
+    </p>
+  </div>
+</div>
+
+<div class="success-overlay" id="successOverlay">
+  <div class="success-heart">💜</div>
+  <h2>Shrek and Fiona</h2>
+  <p>Welcome to our forever 💜</p>
+</div>
+
+<script>
+  const VALID_USERNAME = 'shrek';
+  const VALID_PASSWORD = 'fiona';
+
+  function createStars() {
+    const container = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() * 3 + 1;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (2 + Math.random() * 3) + 's';
+      container.appendChild(star);
+    }
+  }
+  createStars();
+
+  function createShootingStar() {
+    const s = document.createElement('div');
+    s.className = 'shooting-star';
+    s.style.left = Math.random() * 80 + 20 + 'vw';
+    s.style.top = Math.random() * 40 + 'vh';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 2000);
+  }
+  setInterval(createShootingStar, 4000);
+  setTimeout(createShootingStar, 1000);
+
+  function createHeart() {
+    const h = document.createElement('div');
+    h.className = 'float-heart';
+    const hearts = ['💜','💜','💕','💗','💞','🌸','✨','💝','🟣','⭐','🦋'];
+    h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.animationDuration = (7 + Math.random() * 7) + 's';
+    h.style.fontSize = (16 + Math.random() * 28) + 'px';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 14000);
+  }
+  setInterval(createHeart, 800);
+  for (let i = 0; i < 8; i++) setTimeout(createHeart, i * 200);
+
+  function togglePassword() {
+    const pw = document.getElementById('password');
+    const btn = document.getElementById('togglePw');
+    if (pw.type === 'password') {
+      pw.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      pw.type = 'password';
+      btn.textContent = '👁️';
+    }
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
+    const loginBtn = document.getElementById('loginBtn');
+
+    loginBtn.classList.add('loading');
+
+    setTimeout(() => {
+      loginBtn.classList.remove('loading');
+
+      if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+        errorMsg.classList.remove('show');
+        const overlay = document.getElementById('successOverlay');
+        overlay.classList.add('active');
+        for (let i = 0; i < 60; i++) setTimeout(createHeart, i * 40);
+        setTimeout(() => { window.location.href = 'index.html'; }, 2500);
+      } else {
+        errorMsg.textContent = '❌ Hindi ikaw si Shrek, O Fiona!';
+        errorMsg.classList.remove('show');
+        void errorMsg.offsetWidth;
+        errorMsg.classList.add('show');
+
+        const card = document.querySelector('.login-card');
+        card.style.animation = 'none';
+        setTimeout(() => { card.style.animation = 'shake 0.5s ease'; }, 10);
+
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+        for (let i = 0; i < 5; i++) setTimeout(createHeart, i * 100);
+      }
+    }, 600);
+  }
+
+  document.addEventListener('click', (e) => {
+    const sparkles = ['✨', '💜', '⭐', '💫'];
+    for (let i = 0; i < 4; i++) {
+      const s = document.createElement('div');
+      s.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+      s.style.position = 'fixed';
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      s.style.pointerEvents = 'none';
+      s.style.fontSize = (14 + Math.random() * 12) + 'px';
+      s.style.zIndex = '999';
+      s.style.transition = 'all 0.9s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      s.style.filter = 'hue-rotate(260deg)';
+      document.body.appendChild(s);
+      setTimeout(() => {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 60 + Math.random() * 100;
+        s.style.transform = `translate(${Math.cos(angle) * dist}px, ${Math.sin(angle) * dist}px) scale(0) rotate(${Math.random() * 360}deg)`;
+        s.style.opacity = '0';
+      }, 10);
+      setTimeout(() => s.remove(), 1000);
+    }
+  });
+</script>
+
+</body>
+</html>

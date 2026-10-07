@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+<meta charset="UTF-8">
+<title>Plawers por you✨🦋</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    background: #1a0d2e;
+    background-image:
+      radial-gradient(ellipse at 50% 100%, #4a1a6b 0%, #2d1b4e 30%, #1a0d2e 60%, #0a0518 100%);
+    overflow: hidden;
+    font-family: 'Georgia', serif;
+  }
+
+  .scene {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .aurora {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 95%, rgba(168, 85, 247, 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 35% at 30% 80%, rgba(224, 179, 255, 0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 45% 35% at 70% 85%, rgba(139, 63, 201, 0.3) 0%, transparent 60%);
+    animation: auroraShift 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes auroraShift {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50%      { opacity: 1; transform: scale(1.08); }
+  }
+
+  .nebula {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
+    filter: blur(40px);
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: nebulaFloat 12s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes nebulaFloat {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+    50%      { transform: translateX(-50%) scale(1.3); opacity: 1; }
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #ffffff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; transform: scale(0.8); }
+    50%      { opacity: 1; transform: scale(1.5); }
+  }
+
+  .shooting-star {
+    position: absolute;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #ffffff, #e0b3ff);
+    border-radius: 50%;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px #e0b3ff);
+    animation: shoot 6s ease-in infinite;
+  }
+  @keyframes shoot {
+    0%   { opacity: 0; transform: translate(0, 0) rotate(-35deg); }
+    5%   { opacity: 1; }
+    15%  { opacity: 1; transform: translate(400px, 280px) rotate(-35deg); }
+    20%, 100% { opacity: 0; transform: translate(400px, 280px) rotate(-35deg); }
+  }
+
+  .dot {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #e0b3ff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #e0b3ff, 0 0 20px rgba(224,179,255,0.6), 0 0 30px rgba(224,179,255,0.3);
+    opacity: 0;
+    animation: dotFloat 6s ease-in-out infinite;
+  }
+  @keyframes dotFloat {
+    0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
+    20%, 80% { opacity: 1; transform: scale(1); }
+    50%      { transform: translateY(-30px) scale(1.3); }
+  }
+
+  .sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #fff, 0 0 12px #e0b3ff;
+    opacity: 0;
+    animation: sparkleFlash 3s ease-in-out infinite;
+  }
+  .sparkle::before,
+  .sparkle::after {
+    content: '';
+    position: absolute;
+    background: #e0b3ff;
+    border-radius: 50%;
+  }
+  .sparkle::before {
+    width: 100%; height: 2px;
+    top: 50%; left: -100%;
+    transform: translateY(-50%);
+    box-shadow: 200% 0 0 #e0b3ff;
+  }
+  .sparkle::after {
+    width: 2px; height: 100%;
+    top: -100%; left: 50%;
+    transform: translateX(-50%);
+  }
+  @keyframes sparkleFlash {
+    0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50%      { opacity: 1; transform: scale(1.2) rotate(180deg); }
+  }
+
+  .blade {
+    position: absolute;
+    bottom: 0;
+    width: 12px;
+    height: var(--h);
+    background: linear-gradient(to top, #2d0a4e, #5c1f8a 50%, #8b3fc9);
+    border-radius: 50% 50% 0 0 / 80% 80% 0 0;
+    transform-origin: bottom center;
+    transform: rotate(var(--rot));
+    opacity: 0;
+    animation: grassGrow 2s ease-out forwards, bladeSway 3s ease-in-out infinite alternate 2s;
+  }
+  @keyframes grassGrow {
+    0%   { transform: scaleY(0) rotate(var(--rot)); opacity: 0; }
+    100% { transform: scaleY(1) rotate(var(--rot)); opacity: 1; }
+  }
+  @keyframes bladeSway {
+    0%   { transform: rotate(calc(var(--rot) - 2deg)); }
+    100% { transform: rotate(calc(var(--rot) + 2deg)); }
+  }
+
+  .firefly {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #fff9d6 0%, #ffe066 50%, transparent 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ffe066, 0 0 20px rgba(255,224,102,0.6);
+    opacity: 0;
+    animation: fireflyFloat 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes fireflyFloat {
+    0%   { opacity: 0; transform: translate(0, 0); }
+    10%  { opacity: 1; }
+    25%  { transform: translate(30px, -40px); }
+    50%  { opacity: 1; transform: translate(-20px, -80px); }
+    75%  { transform: translate(20px, -40px); }
+    90%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(0, 0); }
+  }
+
+  .main-stem {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 8px;
+    height: 0;
+    background: linear-gradient(to right, #4a1a6b, #7a3fa8, #b07fe0, #7a3fa8, #4a1a6b);
+    border-radius: 4px;
+    transform-origin: bottom center;
+    transform: translateX(-50%);
+    animation: mainStemGrow 2s ease-out forwards;
+    z-index: 3;
+    box-shadow: 0 0 10px rgba(139, 63, 201, 0.7), 0 0 20px rgba(139, 63, 201, 0.3);
+  }
+  @keyframes mainStemGrow {
+    0%   { height: 0; }
+    100% { height: 180px; }
+  }
+
+  .branch {
+    position: absolute;
+    bottom: 180px;
+    left: 50%;
+    width: 6px;
+    height: 0;
+    background: linear-gradient(to right, #4a1a6b, #7a3fa8, #b07fe0, #7a3fa8, #4a1a6b);
+    border-radius: 3px;
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(var(--angle));
+    animation: branchGrow 1.8s ease-out forwards;
+    animation-delay: 1.8s;
+    z-index: 2;
+    box-shadow: 0 0 8px rgba(139, 63, 201, 0.5);
+  }
+  @keyframes branchGrow {
+    0%   { height: 0; }
+    100% { height: var(--branchH); }
+  }
+
+  .branch-leaf {
+    position: absolute;
+    width: 0;
+    height: 0;
+    background: linear-gradient(135deg, #4a1a6b, #8b3fc9 50%, #b07fe0);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0;
+    transform-origin: var(--origin, right center);
+    animation: leafGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    z-index: 2;
+    box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2), 0 0 10px rgba(139, 63, 201, 0.4);
+  }
+  @keyframes leafGrow {
+    0%   { width: 0; height: 0; opacity: 0; }
+    100% { width: var(--w); height: var(--h); opacity: 1; }
+  }
+
+  .flower {
+    position: absolute;
+    transform: translateX(-50%) rotate(var(--lean, 0deg));
+    width: 0;
+    height: 0;
+    z-index: 5;
+  }
+
+  .flower::before {
+    content: '';
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    left: 50%;
+    bottom: -20px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(224, 179, 255, 0.6) 0%, rgba(168, 85, 247, 0.25) 40%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0;
+    animation: flowerGlow 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+  @keyframes flowerGlow {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+    50%      { opacity: 1; transform: translateX(-50%) scale(1.3); }
+  }
+
+  .petal {
+    position: absolute;
+    width: var(--pw);
+    height: var(--ph);
+    background: radial-gradient(ellipse at 50% 65%, #c99aff 0%, #a855f7 45%, #7e22ce 85%, #581c87 100%);
+    border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+    transform-origin: center 100%;
+    opacity: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: calc(var(--pw) / -2);
+    box-shadow:
+      inset 0 6px 12px rgba(255,255,255,0.18),
+      inset 0 -8px 14px rgba(0,0,0,0.18),
+      0 0 20px rgba(168, 85, 247, 0.45);
+    animation: petalBloom 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes petalBloom {
+    0%   { opacity: 0; transform: rotate(var(--angle)) scale(0); }
+    60%  { opacity: 1; }
+    100% { opacity: 1; transform: rotate(var(--angle)) scale(1); }
+  }
+
+  .petal::after {
+    content: '';
+    position: absolute;
+    inset: 8% 20% 50% 20%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.35) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .core {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    background: radial-gradient(circle, #fff9d6 0%, #ffe066 40%, #f4b942 80%, #d99a2b 100%);
+    border-radius: 50%;
+    bottom: 6px;
+    left: 50%;
+    margin-left: -13px;
+    z-index: 10;
+    opacity: 0;
+    box-shadow:
+      0 0 15px rgba(255,217,102,1),
+      0 0 30px rgba(255,217,102,0.6),
+      0 0 45px rgba(255,217,102,0.3);
+    animation: coreIn 0.6s ease-out forwards, corePulse 2s ease-in-out infinite 3.5s;
+  }
+  @keyframes coreIn {
+    0%   { opacity: 0; transform: scale(0); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes corePulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(255,217,102,1), 0 0 30px rgba(255,217,102,0.6); transform: scale(1); }
+    50%      { box-shadow: 0 0 30px rgba(255,217,102,1), 0 0 60px rgba(255,217,102,0.8), 0 0 80px rgba(255,217,102,0.4); transform: scale(1.1); }
+  }
+
+  .bush-leaf {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    background: linear-gradient(135deg, #3a0d5c, #5c1f8a 50%, #8b3fc9);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0;
+    transform-origin: bottom center;
+    transform: rotate(var(--rot));
+    animation: bushGrow 1.5s ease-out forwards;
+    z-index: 1;
+    box-shadow: inset -3px -3px 0 rgba(0,0,0,0.2), 0 0 10px rgba(139, 63, 201, 0.3);
+  }
+  @keyframes bushGrow {
+    0%   { width: 0; height: 0; opacity: 0; }
+    100% { width: var(--w); height: var(--h); opacity: 1; }
+  }
+
+  .falling {
+    position: absolute;
+    width: 14px;
+    height: 18px;
+    background: radial-gradient(ellipse at 50% 70%, #d4a5ff, #a855f7 60%, #7e22ce);
+    border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+    opacity: 0;
+    top: 30%;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
+    animation: petalFall 8s ease-in linear infinite;
+    pointer-events: none;
+  }
+  @keyframes petalFall {
+    0%   { opacity: 0; transform: translateY(0) rotate(0deg) translateX(0); }
+    10%  { opacity: 1; }
+    50%  { transform: translateY(200px) rotate(360deg) translateX(40px); }
+    90%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(500px) rotate(720deg) translateX(-30px); }
+  }
+
+  .light-ray {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    height: 100vh;
+    background: linear-gradient(to top, rgba(224, 179, 255, 0.4), transparent 70%);
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(var(--rot));
+    opacity: 0;
+    filter: blur(1px);
+    animation: rayPulse 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes rayPulse {
+    0%, 100% { opacity: 0.15; }
+    50%      { opacity: 0.4; }
+  }
+
+  .butterfly {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 8;
+    pointer-events: none;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px rgba(224, 179, 255, 0.8));
+  }
+  .butterfly .wing {
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 16px;
+    background: radial-gradient(ellipse at 50% 40%, #d4a5ff 0%, #a855f7 60%, #7e22ce 100%);
+    border-radius: 60% 40% 50% 50% / 50% 50% 60% 60%;
+    box-shadow: inset 0 0 5px rgba(255,255,255,0.5);
+  }
+  .butterfly .wing.left  { left: 0;  transform-origin: right center; animation: flapLeft 0.4s ease-in-out infinite alternate; }
+  .butterfly .wing.right { right: 0; transform-origin: left center;  animation: flapRight 0.4s ease-in-out infinite alternate; }
+  @keyframes flapLeft {
+    0%   { transform: rotateY(0deg) rotate(-10deg); }
+    100% { transform: rotateY(70deg) rotate(-10deg); }
+  }
+  @keyframes flapRight {
+    0%   { transform: rotateY(0deg) rotate(10deg); }
+    100% { transform: rotateY(-70deg) rotate(10deg); }
+  }
+  .butterfly .body {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 12px;
+    background: #2d0a4e;
+    border-radius: 2px;
+    z-index: 2;
+  }
+
+  .butterfly.b1 { animation: fly1 14s ease-in-out infinite 6s; }
+  .butterfly.b2 { animation: fly2 18s ease-in-out infinite 9s; }
+  .butterfly.b3 { animation: fly3 16s ease-in-out infinite 12s; }
+
+  @keyframes fly1 {
+    0%   { opacity: 0; transform: translate(-100px, 100px) scale(0.8); }
+    8%   { opacity: 1; }
+    25%  { transform: translate(80px, 0px) scale(1); }
+    50%  { opacity: 1; transform: translate(200px, -80px) scale(0.9); }
+    75%  { transform: translate(50px, -150px) scale(1); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(-100px, -200px) scale(0.8); }
+  }
+  @keyframes fly2 {
+    0%   { opacity: 0; transform: translate(200px, 150px) scale(0.9); }
+    8%   { opacity: 1; }
+    30%  { transform: translate(50px, 50px) scale(1); }
+    55%  { opacity: 1; transform: translate(-80px, -60px) scale(0.85); }
+    80%  { transform: translate(100px, -180px) scale(1); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(200px, -250px) scale(0.9); }
+  }
+  @keyframes fly3 {
+    0%   { opacity: 0; transform: translate(50px, 250px) scale(0.7); }
+    8%   { opacity: 1; }
+    35%  { transform: translate(-60px, 100px) scale(1); }
+    60%  { opacity: 1; transform: translate(120px, -20px) scale(0.9); }
+    85%  { transform: translate(-30px, -170px) scale(1); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(50px, -250px) scale(0.7); }
+  }
+
+  .bee {
+    position: absolute;
+    width: 18px;
+    height: 12px;
+    z-index: 8;
+    pointer-events: none;
+    opacity: 0;
+    filter: drop-shadow(0 0 5px rgba(255, 224, 102, 0.8));
+  }
+  .bee .bee-body {
+    position: absolute;
+    left: 0;
+    top: 3px;
+    width: 14px;
+    height: 8px;
+    background: linear-gradient(90deg, #ffe066 0%, #ffe066 25%, #2d0a4e 25%, #2d0a4e 40%, #ffe066 40%, #ffe066 65%, #2d0a4e 65%, #2d0a4e 80%, #ffe066 80%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    box-shadow: inset 0 -2px 3px rgba(0,0,0,0.2);
+  }
+  .bee .bee-wing {
+    position: absolute;
+    top: 0;
+    width: 7px;
+    height: 6px;
+    background: radial-gradient(ellipse, rgba(224, 179, 255, 0.9), rgba(255, 255, 255, 0.5));
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+  .bee .bee-wing.w1 { left: 3px; transform-origin: bottom right; animation: beeFlap 0.15s ease-in-out infinite alternate; }
+  .bee .bee-wing.w2 { left: 8px; transform-origin: bottom left;  animation: beeFlap2 0.15s ease-in-out infinite alternate; }
+  @keyframes beeFlap {
+    0%   { transform: rotate(-20deg) scaleY(1); }
+    100% { transform: rotate(-40deg) scaleY(0.6); }
+  }
+  @keyframes beeFlap2 {
+    0%   { transform: rotate(20deg) scaleY(1); }
+    100% { transform: rotate(40deg) scaleY(0.6); }
+  }
+
+  .bee.bee1 { animation: buzz1 10s ease-in-out infinite 7s; }
+  .bee.bee2 { animation: buzz2 12s ease-in-out infinite 10s; }
+
+  @keyframes buzz1 {
+    0%   { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+    8%   { opacity: 1; }
+    20%  { transform: translate(80px, -30px) rotate(10deg); }
+    40%  { transform: translate(-40px, -60px) rotate(-15deg); }
+    60%  { transform: translate(120px, -20px) rotate(20deg); }
+    80%  { transform: translate(30px, -90px) rotate(-5deg); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(200px, -120px) rotate(30deg); }
+  }
+  @keyframes buzz2 {
+    0%   { opacity: 0; transform: translate(250px, 0) rotate(180deg); }
+    8%   { opacity: 1; }
+    25%  { transform: translate(150px, -50px) rotate(200deg); }
+    50%  { transform: translate(60px, -20px) rotate(160deg); }
+    75%  { transform: translate(-50px, -80px) rotate(180deg); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(-100px, -100px) rotate(210deg); }
+  }
+
+  .moth {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    z-index: 7;
+    pointer-events: none;
+    opacity: 0;
+  }
+  .moth::before,
+  .moth::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 6px;
+    height: 10px;
+    background: radial-gradient(ellipse, #e0b3ff 0%, #a855f7 80%);
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(224, 179, 255, 0.8);
+  }
+  .moth::before { left: 0; transform-origin: right center; animation: mothFlap 0.3s ease-in-out infinite alternate; }
+  .moth::after  { right: 0; transform-origin: left center;  animation: mothFlap2 0.3s ease-in-out infinite alternate; }
+  @keyframes mothFlap {
+    0%   { transform: rotate(-10deg); }
+    100% { transform: rotate(-50deg); }
+  }
+  @keyframes mothFlap2 {
+    0%   { transform: rotate(10deg); }
+    100% { transform: rotate(50deg); }
+  }
+
+  .moth.m1 { animation: mothFly1 15s ease-in-out infinite 8s; }
+  .moth.m2 { animation: mothFly2 17s ease-in-out infinite 13s; }
+
+  @keyframes mothFly1 {
+    0%   { opacity: 0; transform: translate(-50px, 200px); }
+    10%  { opacity: 1; }
+    40%  { transform: translate(100px, 50px); }
+    70%  { transform: translate(-30px, -50px); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(-150px, -100px); }
+  }
+  @keyframes mothFly2 {
+    0%   { opacity: 0; transform: translate(200px, 180px); }
+    10%  { opacity: 1; }
+    45%  { transform: translate(50px, 30px); }
+    70%  { transform: translate(120px, -80px); }
+    92%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(200px, -120px); }
+  }
+
+  .caption {
+    position: absolute;
+    /* bottom: 30px; */
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #f0d4ff;
+    font-size: 1.3rem;
+    letter-spacing: 5px;
+    font-style: italic;
+    text-shadow:
+      0 0 12px rgba(224, 179, 255, 1),
+      0 0 24px rgba(168, 85, 247, 0.7),
+      0 0 40px rgba(168, 85, 247, 0.4);
+    opacity: 0;
+    animation: fadeIn 2s ease-out 4s forwards, captionPulse 3s ease-in-out infinite 6s;
+    white-space: nowrap;
+    z-index: 20;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes captionPulse {
+    0%, 100% { text-shadow: 0 0 12px rgba(224,179,255,1), 0 0 24px rgba(168,85,247,0.7); }
+    50%      { text-shadow: 0 0 20px rgba(224,179,255,1), 0 0 40px rgba(168,85,247,1), 0 0 70px rgba(168,85,247,0.6); }
+  }
+
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 15;
+  }
+
+  /* ===== HOME BUTTON (para sa iframe) ===== */
+  .home-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    padding: 14px 30px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50px;
+    background: linear-gradient(45deg, #9d4edd, #6a0dad);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.6);
+    transition: all 0.3s;
+    z-index: 30;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .home-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(157, 78, 221, 0.9);
+  }
+
+</style>
+</head>
+<body>
+<div class="scene" id="scene">
+
+  <div class="aurora"></div>
+  <div class="nebula"></div>
+
+  <div class="light-ray" style="--rot: -25deg;"></div>
+  <div class="light-ray" style="--rot: -12deg;"></div>
+  <div class="light-ray" style="--rot: 0deg;"></div>
+  <div class="light-ray" style="--rot: 12deg;"></div>
+  <div class="light-ray" style="--rot: 25deg;"></div>
+
+  <div class="bush-leaf" style="left: 25%; --rot: -25deg; --w: 90px; --h: 40px; animation-delay: 0.2s;"></div>
+  <div class="bush-leaf" style="left: 35%; --rot: -10deg; --w: 100px; --h: 45px; animation-delay: 0.3s;"></div>
+  <div class="bush-leaf" style="left: 45%; --rot: 0deg;   --w: 110px; --h: 50px; animation-delay: 0.4s;"></div>
+  <div class="bush-leaf" style="left: 55%; --rot: 5deg;   --w: 110px; --h: 50px; animation-delay: 0.4s;"></div>
+  <div class="bush-leaf" style="left: 65%; --rot: 15deg;  --w: 100px; --h: 45px; animation-delay: 0.3s;"></div>
+  <div class="bush-leaf" style="left: 75%; --rot: 25deg;  --w: 90px;  --h: 40px; animation-delay: 0.2s;"></div>
+  <div class="bush-leaf" style="left: 20%; --rot: -40deg; --w: 70px;  --h: 35px; animation-delay: 0.1s;"></div>
+  <div class="bush-leaf" style="left: 80%; --rot: 38deg;  --w: 70px;  --h: 35px; animation-delay: 0.1s;"></div>
+
+  <div class="blade" style="left: 8%;  --h: 180px; --rot: -18deg; animation-delay: 0.4s;"></div>
+  <div class="blade" style="left: 4%;  --h: 140px; --rot: -28deg; animation-delay: 0.5s;"></div>
+  <div class="blade" style="left: 14%; --h: 200px; --rot: -8deg;  animation-delay: 0.6s;"></div>
+  <div class="blade" style="left: 88%; --h: 190px; --rot: 16deg;  animation-delay: 0.4s;"></div>
+  <div class="blade" style="left: 93%; --h: 150px; --rot: 26deg;  animation-delay: 0.5s;"></div>
+  <div class="blade" style="left: 84%; --h: 210px; --rot: 6deg;   animation-delay: 0.6s;"></div>
+
+  <div class="main-stem"></div>
+
+  <div class="branch" style="--angle: -32deg; --branchH: 200px; animation-delay: 1.8s;"></div>
+  <div class="branch" style="--angle: 0deg; --branchH: 260px; animation-delay: 1.7s;"></div>
+  <div class="branch" style="--angle: 32deg; --branchH: 200px; animation-delay: 1.8s;"></div>
+
+  <div class="branch-leaf" style="left: 50%; bottom: 100px; --w: 55px; --h: 22px; --origin: right center; transform: translateX(-100%) rotate(-25deg); animation-delay: 1.5s;"></div>
+  <div class="branch-leaf" style="left: 50%; bottom: 140px; --w: 55px; --h: 22px; --origin: left center; transform: rotate(25deg); animation-delay: 1.6s;"></div>
+  <div class="branch-leaf" style="left: calc(50% - 100px); bottom: 260px; --w: 45px; --h: 18px; --origin: right center; transform: rotate(-20deg); animation-delay: 2.5s;"></div>
+  <div class="branch-leaf" style="left: 50%; bottom: 320px; --w: 45px; --h: 18px; --origin: right center; transform: translateX(-100%) rotate(-20deg); animation-delay: 2.4s;"></div>
+  <div class="branch-leaf" style="left: 50%; bottom: 360px; --w: 45px; --h: 18px; --origin: left center; transform: rotate(20deg); animation-delay: 2.5s;"></div>
+  <div class="branch-leaf" style="left: calc(50% + 100px); bottom: 260px; --w: 45px; --h: 18px; --origin: left center; transform: rotate(20deg); animation-delay: 2.5s;"></div>
+
+  <div class="flower" style="left: calc(50% - 105px); bottom: 340px; --lean: -12deg;">
+    <div class="petal" style="--angle: -75deg; --pw: 55px; --ph: 70px; animation-delay: 2.6s;"></div>
+    <div class="petal" style="--angle: -45deg; --pw: 55px; --ph: 70px; animation-delay: 2.7s;"></div>
+    <div class="petal" style="--angle: -15deg; --pw: 55px; --ph: 70px; animation-delay: 2.8s;"></div>
+    <div class="petal" style="--angle:  15deg; --pw: 55px; --ph: 70px; animation-delay: 2.9s;"></div>
+    <div class="petal" style="--angle:  45deg; --pw: 55px; --ph: 70px; animation-delay: 3.0s;"></div>
+    <div class="petal" style="--angle:  75deg; --pw: 55px; --ph: 70px; animation-delay: 3.1s;"></div>
+    <div class="core" style="animation-delay: 3.3s;"></div>
+  </div>
+
+  <div class="flower" style="left: 50%; bottom: 440px; --lean: 0deg;">
+    <div class="petal" style="--angle: -75deg; --pw: 60px; --ph: 75px; animation-delay: 2.5s;"></div>
+    <div class="petal" style="--angle: -45deg; --pw: 60px; --ph: 75px; animation-delay: 2.6s;"></div>
+    <div class="petal" style="--angle: -15deg; --pw: 60px; --ph: 75px; animation-delay: 2.7s;"></div>
+    <div class="petal" style="--angle:  15deg; --pw: 60px; --ph: 75px; animation-delay: 2.8s;"></div>
+    <div class="petal" style="--angle:  45deg; --pw: 60px; --ph: 75px; animation-delay: 2.9s;"></div>
+    <div class="petal" style="--angle:  75deg; --pw: 60px; --ph: 75px; animation-delay: 3.0s;"></div>
+    <div class="core" style="animation-delay: 3.2s;"></div>
+  </div>
+
+  <div class="flower" style="left: calc(50% + 105px); bottom: 340px; --lean: 12deg;">
+    <div class="petal" style="--angle: -75deg; --pw: 55px; --ph: 70px; animation-delay: 2.6s;"></div>
+    <div class="petal" style="--angle: -45deg; --pw: 55px; --ph: 70px; animation-delay: 2.7s;"></div>
+    <div class="petal" style="--angle: -15deg; --pw: 55px; --ph: 70px; animation-delay: 2.8s;"></div>
+    <div class="petal" style="--angle:  15deg; --pw: 55px; --ph: 70px; animation-delay: 2.9s;"></div>
+    <div class="petal" style="--angle:  45deg; --pw: 55px; --ph: 70px; animation-delay: 3.0s;"></div>
+    <div class="petal" style="--angle:  75deg; --pw: 55px; --ph: 70px; animation-delay: 3.1s;"></div>
+    <div class="core" style="animation-delay: 3.3s;"></div>
+  </div>
+
+  <div class="butterfly b1" style="left: 15%; top: 50%;">
+    <div class="wing left"></div>
+    <div class="body"></div>
+    <div class="wing right"></div>
+  </div>
+  <div class="butterfly b2" style="left: 60%; top: 40%;">
+    <div class="wing left"></div>
+    <div class="body"></div>
+    <div class="wing right"></div>
+  </div>
+  <div class="butterfly b3" style="left: 40%; top: 60%;">
+    <div class="wing left"></div>
+    <div class="body"></div>
+    <div class="wing right"></div>
+  </div>
+
+  <div class="bee bee1" style="left: 35%; top: 45%;">
+    <div class="bee-wing w1"></div>
+    <div class="bee-body"></div>
+    <div class="bee-wing w2"></div>
+  </div>
+  <div class="bee bee2" style="left: 55%; top: 50%;">
+    <div class="bee-wing w1"></div>
+    <div class="bee-body"></div>
+    <div class="bee-wing w2"></div>
+  </div>
+
+  <div class="moth m1" style="left: 25%; top: 55%;"></div>
+  <div class="moth m2" style="left: 70%; top: 45%;"></div>
+
+  <div class="caption">💜 Flowers for you Biii💜</div>
+
+  <div class="vignette"></div>
+
+</div>
+
+<!-- 🏠 HOME BUTTON - tinatawag ang parent.hideFlower() -->
+<button class="home-btn" onclick="goHome()">
+  🏠 Home
+</button>
+
+<script>
+  const scene = document.getElementById('scene');
+
+  // ==================================================
+  // ✨ EFFECTS
+  // ==================================================
+  for (let i = 0; i < 130; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 75 + '%';
+    s.style.animationDelay = (Math.random() * 4) + 's';
+    s.style.animationDuration = (3 + Math.random() * 3) + 's';
+    const sz = Math.random() * 2 + 1;
+    s.style.width = s.style.height = sz + 'px';
+    scene.appendChild(s);
+  }
+
+  for (let i = 0; i < 2; i++) {
+    const ss = document.createElement('div');
+    ss.className = 'shooting-star';
+    ss.style.left = (Math.random() * 40) + '%';
+    ss.style.top = (Math.random() * 30) + '%';
+    ss.style.animationDelay = (3 + i * 5) + 's';
+    ss.style.animationDuration = '7s';
+    scene.appendChild(ss);
+  }
+
+  for (let i = 0; i < 20; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.style.left = (15 + Math.random() * 70) + '%';
+    d.style.top = (15 + Math.random() * 55) + '%';
+    d.style.animationDelay = (1 + Math.random() * 5) + 's';
+    d.style.animationDuration = (5 + Math.random() * 4) + 's';
+    scene.appendChild(d);
+  }
+
+  for (let i = 0; i < 35; i++) {
+    const sp = document.createElement('div');
+    sp.className = 'sparkle';
+    sp.style.left = Math.random() * 100 + '%';
+    sp.style.top = (10 + Math.random() * 75) + '%';
+    sp.style.animationDelay = (Math.random() * 3) + 's';
+    sp.style.animationDuration = (2 + Math.random() * 2) + 's';
+    scene.appendChild(sp);
+  }
+
+  for (let i = 0; i < 12; i++) {
+    const ff = document.createElement('div');
+    ff.className = 'firefly';
+    ff.style.left = (20 + Math.random() * 60) + '%';
+    ff.style.top = (40 + Math.random() * 40) + '%';
+    ff.style.animationDelay = (Math.random() * 8) + 's';
+    ff.style.animationDuration = (6 + Math.random() * 4) + 's';
+    scene.appendChild(ff);
+  }
+
+  for (let i = 0; i < 10; i++) {
+    const f = document.createElement('div');
+    f.className = 'falling';
+    f.style.left = (25 + Math.random() * 50) + '%';
+    f.style.animationDelay = (6 + Math.random() * 10) + 's';
+    f.style.animationDuration = (7 + Math.random() * 4) + 's';
+    scene.appendChild(f);
+  }
+
+  // ==================================================
+  // 🏠 HOME BUTTON - Bumalik sa index (parent page)
+  // ==================================================
+  function goHome() {
+    // Kung nasa iframe, tawagin ang parent.hideFlower()
+    if (window.parent && window.parent !== window && typeof window.parent.hideFlower === 'function') {
+      window.parent.hideFlower();
+    } else {
+      // Fallback: kung standalone (hindi iframe), pumunta sa index.html
+      window.location.href = 'index.html';
+    }
+  }
+</script>
+
+</body>
+</html>
